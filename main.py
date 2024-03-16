@@ -14,9 +14,9 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Welcome to my bot')
+        bot.send_message(message.chat.id, 'Welcome to Nithin Nilayam')
     else:
-        bot.send_message(message.chat.id, 'Join my channel to use this bot @pranavcodes   \n\nThen click /start again')
+        bot.send_message(message.chat.id, 'Join my channel to use this bot @seeustore  \n\nThen click /start again')
 
 def checkuserinmychannel(user_id):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@seeustore&user_id={user_id}'
@@ -31,14 +31,14 @@ def checkuserinmychannel(user_id):
 def send_file(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Processing your request...')
+        bot.send_message(message.chat.id, 'Processing your link....!')
         user_id = message.from_user.id
         file_link = generate_link(message.text,message.chat.id)
         if file_link is not None:
             chat_id = message.chat.id
             dowload_file(chat_id,file_link)
     else:
-        bot.send_message(message.chat.id, 'Join my channel to use this bot @pranavcodes')
+        bot.send_message(message.chat.id, 'Join my channel to use this bot @seeustore')
 
 
 def dowload_file(chat_id,file_link):
@@ -71,7 +71,7 @@ def generate_link(file_link,chat_id):
     try:
         return data['direct_link']
     except:
-        bot.send_message(chat_id, 'Error in generating link. Please try again')
+        bot.send_message(chat_id, 'Error in generating link.Please try again')
         return None
 
 
