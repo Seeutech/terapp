@@ -19,7 +19,7 @@ def start(message):
         bot.send_message(message.chat.id, 'Join my channel to use this bot @pranavcodes   \n\nThen click /start again')
 
 def checkuserinmychannel(user_id):
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@pranavcodes&user_id={user_id}'
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@seeustore&user_id={user_id}'
     response = requests.get(url)
     data = response.json()
     if data['result']['status'] == 'member' or data['result']['status'] == 'creator' or data['result']['status'] == 'administrator':
