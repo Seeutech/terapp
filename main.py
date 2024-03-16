@@ -65,7 +65,7 @@ def download_file(file_link):
 
 
 def generate_link(file_link,chat_id):
-    url = "https://terabox-app.vercel.app/api?data="+file_link
+    url = "https://bot-nine-rho.vercel.app/api?data="+file_link
     response = requests.get(url,timeout=10000)
     data = response.json()
     try:
