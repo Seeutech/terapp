@@ -14,9 +14,9 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Welcome to Nithin Nilayam\n\nSent Tera link for file')
+        bot.send_message(message.chat.id, 'Welcome to Nithin Nilayam\nSent Tera link for file')
     else:
-        bot.send_message(message.chat.id, 'Join my channel to use this bot @seeustore\n\nThen click /start again')
+        bot.send_message(message.chat.id, 'Join channel to use this bot @seeustore\nThen click /start again')
 
 def checkuserinmychannel(user_id):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@seeustore&user_id={user_id}'
@@ -31,7 +31,7 @@ def checkuserinmychannel(user_id):
 def send_file(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'File Processing wait....')
+        bot.send_message(message.chat.id, 'Link Processing wait....')
         user_id = message.from_user.id
         file_link = generate_link(message.text,message.chat.id)
         if file_link is not None:
