@@ -4,7 +4,6 @@ import json
 import telebot
 import dotenv
 import random
-const { sendFile } = require("./utils");
 
 dotenv.load_dotenv()
 
