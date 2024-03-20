@@ -16,10 +16,10 @@ def start(message):
     if checkuserinmychannel(user_id):
         bot.send_message(message.chat.id, 'Welcome to Nithin Nilayam\nSent Tera link for file')
     else:
-        bot.send_message(message.chat.id, 'Join channel to use this bot @seeustore\nThen click /start again')
+        bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
 
 def checkuserinmychannel(user_id):
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@seeustore&user_id={user_id}'
+    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@terao2&user_id={user_id}'
     response = requests.get(url)
     data = response.json()
     if data['result']['status'] == 'member' or data['result']['status'] == 'creator' or data['result']['status'] == 'administrator':
@@ -38,7 +38,7 @@ def send_file(message):
             chat_id = message.chat.id
             dowload_file(chat_id,file_link)
     else:
-        bot.send_message(message.chat.id, 'Join my channel to use this bot @seeustore')
+        bot.send_message(message.chat.id, 'Join my channel to use this bot @terao2')
 
 
 def dowload_file(chat_id,file_link):
