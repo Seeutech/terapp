@@ -14,7 +14,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Welcome to Nithin Nilayam\nSent Tera link for file')
+        bot.send_message(message.chat.id, 'Welcome to TERABOX DOWNLOADER (SEEU)\nSent Tera link for file')
     else:
         bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
 
