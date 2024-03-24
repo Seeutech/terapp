@@ -43,7 +43,7 @@ def send_file(message):
         bot.send_message(message.chat.id, 'Join my channel to use this bot @terao2')
 
 def send_media(chat_id, file_link):
-    bot.send_message(chat_id, 'Downloading file...')
+    bot.send_message(chat_id, '📥')
     file_name = download_file(file_link)
     file_extension = file_name.split('.')[1]
     if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
