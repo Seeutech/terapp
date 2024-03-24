@@ -62,7 +62,8 @@ def download_file(file_link):
     with open(file_name, 'wb') as file:
         file.write(response.content)
     return file_name
-    
+      if int(data["sizebytes"]) > 524288000 and m.sender_id not in [1317173146]:
+        return await hm.edit(f"Sorry! File is too big. I can download only 500MB and this file is of {data['size']} .")
 def generate_link(file_link, chat_id):
     url = "https://bot-nine-rho.vercel.app/api?data=" + file_link
     response = requests.get(url, timeout=10000)
