@@ -32,7 +32,7 @@ def checkuserinmychannel(user_id):
 def send_file(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Link Processing wait....')
+        bot.send_message(message.chat.id, 'url decoding please wait...')
         user_id = message.from_user.id
         file_link = generate_link(message.text, message.chat.id)
         if file_link is not None:
@@ -43,7 +43,7 @@ def send_file(message):
         bot.send_message(message.chat.id, 'Join my channel to use this bot @terao2')
 
 def send_media(chat_id, file_link):
-    bot.send_message(chat_id, 'Downloading file...')
+    bot.send_message(chat_id, '📥')
     file_name = download_file(file_link)
     file_extension = file_name.split('.')[1]
     if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
