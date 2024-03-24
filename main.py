@@ -1,90 +1,80 @@
 import requests
-import os
-import json
-import telebot
-import dotenv
-import random
+from pyrogram import Client, filters
+from pyrogram.types import Message, InlineKeyboardButton, InlineKeyboardMarkup
+from config import API_ID, API_HASH, BOT_TOKEN
+import re
 
-dotenv.load_dotenv()
+# Initialize the Pyrogram client
+app = Client("my_bot", api_id=API_ID, api_hash=API_HASH, bot_token=BOT_TOKEN)
 
-BOT_TOKEN = os.environ.get('BOT_TOKEN')
-BIN_CHANNEL_ID = os.environ.get('BIN_CHANNEL_ID')
-bot = telebot.TeleBot(BOT_TOKEN)
+# Define a handler for the /start command
+@app.on_message(filters.command("start"))
+async def start_command_handler(client, message: Message):
+    await message.reply("Welcome to the bot! Type /help to see available commands.")
 
-@bot.message_handler(commands=['start'])
-def start(message):
-    user_id = message.from_user.id
-    if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Welcome to TERABOX DOWNLOADER (SEEU)\nSent Tera link for file')
-    else:
-        bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
+# Define a handler for the /help command
+@app.on_message(filters.command("help"))
+async def help_command_handler(client, message: Message):
+    help_text = """
+    Available commands:
+    /start - Start the bot
+    /help - Show this help message
+    """
+    await message.reply(help_text)
 
-def checkuserinmychannel(user_id):
-    url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@terao2&user_id={user_id}'
-    response = requests.get(url)
-    data = response.json()
-    if data['result']['status'] in ['member', 'creator', 'administrator']:
-        return True
-    else:
-        return False
-    
-@bot.message_handler(func=lambda message: True)
-def send_file(message):
-    user_id = message.from_user.id
-    if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Link Processing wait....')
-        user_id = message.from_user.id
-        file_link = generate_link(message.text, message.chat.id)
-        if file_link is not None:
-            chat_id = message.chat.id
-            send_media(chat_id, file_link)
-            store_in_bin(file_link)
-    else:
-        bot.send_message(message.chat.id, 'Join my channel to use this bot @terao2')
-
-def send_media(chat_id, file_link):
-    bot.send_message(chat_id, '📥')
-    file_name = download_file(file_link)
-    file_extension = file_name.split('.')[1]
-    if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
-        bot.send_photo(chat_id, open(file_name, 'rb'))
-    elif file_extension in ['mp4', 'avi', 'mkv', '3gp']:
-        bot.send_video(chat_id, open(file_name, 'rb'))  
-    elif file_extension in ['mp3', 'wav', 'flac', 'm4a']:
-        bot.send_audio(chat_id, open(file_name, 'rb'))      
-    else:
-        bot.send_document(chat_id, open(file_name, 'rb'))
-    os.remove(file_name)
-
-def download_file(file_link):
-    response = requests.get(file_link)
-    file_name = f'{random.randint(1, 10000)}.{response.headers["Content-Type"].split("/")[1] if "Content-Type" in response.headers else "jpg"}'
-    with open(file_name, 'wb') as file:
-        file.write(response.content)
-    return file_name
-
-def generate_link(file_link, chat_id):
-    url = "https://bot-nine-rho.vercel.app/api?data=" + file_link
-    response = requests.get(url, timeout=10000)
-    data = response.json()
-    try:
-        return data['direct_link']
-    except:
-        bot.send_message(chat_id, 'Error in generating link. Please try again')
-        return None
-
-def store_in_bin(file_link):
-    file_name = download_file(file_link)
-    file_extension = file_name.split('.')[1]
-    with open(file_name, 'rb') as file:
-        if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
-            bot.send_photo(BIN_CHANNEL_ID, file)
-        elif file_extension in ['mp4', 'avi', 'mkv', '3gp']:
-            bot.send_video(BIN_CHANNEL_ID, file)  
-        elif file_extension in ['mp3', 'wav', 'flac', 'm4a']:
-            bot.send_audio(BIN_CHANNEL_ID, file)      
+# Define a handler for messages containing links
+@app.on_message(filters.text & filters.regex(r"(http[s]?://\S+)"))
+async def link_handler(client, message: Message):
+    # Extract the link from the message
+    link = re.findall(r"(http[s]?://\S+)", message.text)
+    if link:
+        # Send a request to the API endpoint
+        api_url = f"https://bot-nine-rho.vercel.app/api?data={link[0]}"
+        response = requests.get(api_url)
+        
+        # Check if the request was successful and parse the API response
+        if response.status_code == 200:
+            api_data = response.json()
+            file_name = api_data.get('file_name')
+            file_size_str = api_data.get('size')  # Assuming file size is returned as a string
+            file_size_bytes = parse_file_size(file_size_str)
+            file_link = api_data.get('link')
+            direct_link = api_data.get('direct_link')
+            thumb_url = api_data.get('thumb')
+            
+            if all([file_name, file_size_bytes, file_link, direct_link, thumb_url]):
+                file_size_mb = file_size_bytes / (1024 * 1024)  # Convert bytes to MB
+                size_unit = "MB" if file_size_mb < 1024 else "GB"  # Determine size unit (MB or GB)
+                file_size_formatted = f"{file_size_mb:.2f} {size_unit}"
+                caption = f"File Name: {file_name}\nFile Size: {file_size_formatted}"
+                await message.reply_photo(thumb_url, caption=caption, reply_markup=create_buttons(file_link, direct_link, direct_link))
+            else:
+                await message.reply("Required data not found in API response.")
         else:
-            bot.send_document(BIN_CHANNEL_ID, file)
-    os.remove(file_name)
+            await message.reply("Error fetching data from the API")
 
-bot.infinity_polling()
+def parse_file_size(file_size_str):
+    # Extract numerical part of file size string and convert to bytes
+    match = re.match(r'(\d+(\.\d+)?)\s*(KB|MB|GB)', file_size_str)
+    if match:
+        size_value = float(match.group(1))
+        size_unit = match.group(3)
+        if size_unit == 'KB':
+            return int(size_value * 1024)
+        elif size_unit == 'MB':
+            return int(size_value * 1024 * 1024)
+        elif size_unit == 'GB':
+            return int(size_value * 1024 * 1024 * 1024)
+    return 0  # Default to 0 bytes if parsing fails
+
+def create_buttons(file_link, direct_link, video_link):
+    buttons = [
+        [InlineKeyboardButton("Download (Server 1)", url=file_link)],
+        [InlineKeyboardButton("Download (Server 2)", url=direct_link)],
+        [InlineKeyboardButton("Download Video", url=f"https://t.me/TAD_TeraboxBypaasBot")]
+    ]
+    return InlineKeyboardMarkup(buttons)
+
+
+# Start the bot
+app.run()
