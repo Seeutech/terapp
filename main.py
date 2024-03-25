@@ -72,8 +72,10 @@ def generate_link(file_link, chat_id):
     except:
         bot.send_message(chat_id, 'Error in generating link. Please try again')
         return None
-
+        
 def store_in_bin(file_link):
+    user_id = os.getuid()
+    print(f"Current user ID: {user_id}")
     file_name = download_file(file_link)
     file_extension = file_name.split('.')[1]
     with open(file_name, 'rb') as file:
