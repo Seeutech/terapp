@@ -74,7 +74,7 @@ def generate_link(file_link, chat_id):
         return None
         
 def store_in_bin(file_link):
-    user_id = os.getuid()
+    user_id = os.getpid()
     print(f"Current user ID: {user_id}")
     file_name = download_file(file_link)
     file_extension = file_name.split('.')[1]
