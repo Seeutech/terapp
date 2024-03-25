@@ -32,7 +32,7 @@ def checkuserinmychannel(user_id):
 def send_file(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'CHECKING URL PLEASE WAIT..')
+        bot.send_message(message.chat.id, '🔓')
         user_id = message.from_user.id
         file_link = generate_link(message.text, message.chat.id)
         if file_link is not None:
