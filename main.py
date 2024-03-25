@@ -74,8 +74,6 @@ def generate_link(file_link, chat_id):
         return None
         
 def store_in_bin(file_link):
-    user_id = os.getpid()
-    print(f"Current user ID: {user_id}")
     file_name = download_file(file_link)
     file_extension = file_name.split('.')[1]
     with open(file_name, 'rb') as file:
@@ -84,9 +82,9 @@ def store_in_bin(file_link):
         elif file_extension in ['mp4', 'avi', 'mkv', '3gp']:
             bot.send_video(BIN_CHANNEL_ID, file)  
         elif file_extension in ['mp3', 'wav', 'flac', 'm4a']:
-            bot.send_audio(BIN_CHANNEL_ID, file)      
+            bot.send_audio(BIN_CHANNEL_ID, file,user_id)      
         else:
-            bot.send_document(BIN_CHANNEL_ID, file)
+            bot.send_document(BIN_CHANNEL_ID, file,user_id)
     os.remove(file_name)
 
 bot.infinity_polling()
