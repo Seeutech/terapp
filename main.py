@@ -18,6 +18,14 @@ def start(message):
         bot.send_message(message.chat.id, 'Welcome to TERABOX DOWNLOADER (SEEU)\nSent Tera link for file')
     else:
         bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
+        
+        @bot.message_handler(commands=['plan'])
+def start(message):
+    user_id = message.from_user.id
+    if checkuserinmychannel(user_id):
+        bot.send_message(message.chat.id, 'PREMINUM\n\nstarting plain 20rs')
+    else:
+        bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
 
 def checkuserinmychannel(user_id):
     url = f'https://api.telegram.org/bot{BOT_TOKEN}/getChatMember?chat_id=@terao2&user_id={user_id}'
