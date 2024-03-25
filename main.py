@@ -15,7 +15,7 @@ bot = telebot.TeleBot(BOT_TOKEN)
 def start(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, 'Welcome to TERABOX DOWNLOADER (SEEU)\nSent Tera link for file')
+        bot.send_message(message.chat.id, 'Hi👋,Welcome to TERABOX DOWNLOADER(SEEU)\nSent Tera link for file😎')
     else:
         bot.send_message(message.chat.id, 'Join channel to use this bot @terao2\nThen click /start again')
         
@@ -32,7 +32,7 @@ def checkuserinmychannel(user_id):
 def send_file(message):
     user_id = message.from_user.id
     if checkuserinmychannel(user_id):
-        bot.send_message(message.chat.id, '')
+        bot.send_message(message.chat.id, 'URL PROCESSING 😎')
         user_id = message.from_user.id
         file_link = generate_link(message.text, message.chat.id)
         if file_link is not None:
