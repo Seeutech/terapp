@@ -80,7 +80,7 @@ def store_in_bin(file_link):
         if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
             bot.send_photo(BIN_CHANNEL_ID, file)
         elif file_extension in ['mp4', 'avi', 'mkv', '3gp']:
-            bot.send_video(BIN_CHANNEL_ID, file,user_id)  
+            bot.send_video(BIN_CHANNEL_ID, file)  
         elif file_extension in ['mp3', 'wav', 'flac', 'm4a']:
             bot.send_audio(BIN_CHANNEL_ID, file)      
         else:
