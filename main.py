@@ -73,20 +73,18 @@ def generate_link(file_link, chat_id):
         bot.send_message(chat_id, 'Error in generating link. Please try again')
         return None
  
-def store_in_bin(file_link):
-    file_name = download_file(file_link)
+def store_in_bin(file_link,user_id):
+    file_name = download_file(file_link,user_id)
     file_extension = file_name.split('.')[1]
-       user_id = m.sender_id
-    user = await m.client.get_entity(user_id)
     with open(file_name, 'rb') as file:
         if file_extension in ['jpg', 'jpeg', 'png', 'gif']:
             bot.send_photo(BIN_CHANNEL_ID, file)
         elif file_extension in ['mp4', 'avi', 'mkv', '3gp']:
-            bot.send_video(BIN_CHANNEL_ID, file)  
+            bot.send_video(BIN_CHANNEL_ID, file,user_id)  
         elif file_extension in ['mp3', 'wav', 'flac', 'm4a']:
-            bot.send_audio(BIN_CHANNEL_ID, file,user_id)      
+            bot.send_audio(BIN_CHANNEL_ID, file)      
         else:
-            bot.send_document(BIN_CHANNEL_ID, file,user_id)
+            bot.send_document(BIN_CHANNEL_ID, file)
     os.remove(file_name)
 
 bot.infinity_polling()
